@@ -21,7 +21,7 @@ from Matrice_adjacence import creation_matrice
 """ ********************
     **** Classes ****
     ******************** """
-# no data
+# no dataa
 
 """ ********************
     **** Functions ****
