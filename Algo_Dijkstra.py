@@ -13,38 +13,21 @@ to do :
 """ ********************
     **** Imports ****
     ******************** """
-
-import numpy as np
+# no data
 
 """ ********************
     **** Classes ****
     ******************** """
-
+# no data
 
 
 """ ********************
     **** Functions ****
     ******************** """
-
-
-
-""" ********************
-    **** Global Var ****
-    ******************** """
-
-
-
-""" **************
-    **** Main ****
-    ************** """
-
-matrice=np.array([[0,5,6,0],
-                 [0,0,2,4],
-                 [0,6,0,1],
-                 [4,0,0,0]])
-
-
-def pcc(matadj,start,end):
+    
+def plus_court_chemin(matadj,start,end):
+    assert type(start) == int , "L'indice de la station de départ doit être un entier"
+    assert type(end) == int , "L'indice de la station d'arrivé doit être un entier"
     n = len(matadj)
     distance = [float('inf') for i in range(n)]
     precedent = [None for i in range(n)]
@@ -73,24 +56,20 @@ def pcc(matadj,start,end):
     
     chemin.reverse()
         
-    return "le chemin le plus court pour aller de",start,"à",end,"est",chemin,"et il fait",distance[end],"km"
+    return chemin,distance[end]
 
-print(pcc(matrice,1,0))
 
-"""
+""" ********************
+    **** Global Var ****
+    ******************** """
+# no data
 
-function shortestPath(adjMatrix, start, end)
-    initialize variables
-    while queue is not empty
-        get current node from queue
-        mark it as visited
-        check all adjacent nodes
-        update distance if a shorter path is found
-        if not visited, add to queue
-    construct path from previous nodes
-    return path
 
-"""
+""" **************
+    **** Main ****
+    ************** """
+# no data
+
 
 
 

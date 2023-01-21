@@ -1,6 +1,30 @@
+# -*- coding: utf-8 -*-
+"""
+************************
+@author : Gabin
+@contact : gabin.mondongou@auxlazaristeslasalle.fr
+created on : Tue Jan 3 16:02:26 2023
+last mod : 2022
+title : notitle
+goals : brief description
+to do : what should be done next time
+************************* """
+
+""" ********************
+    **** Imports ****
+    ******************** """
 import requests
 import math as m
 
+""" ********************
+    **** Classes ****
+    ******************** """
+# no data
+
+""" ********************
+    **** Functions ****
+    ******************** """
+    
 def recup(lien_lignes,lien_arrets):
     
     liste_lignes_provisoire = requests.get(lien_lignes).json()["features"]
@@ -92,6 +116,24 @@ def distance(station1,station2): # Calcul la distance entre deux stations
     x2,y2 = station2['geometry']['coordinates'][0],station1['geometry']['coordinates'][1]
     distance = m.sqrt( (x2-x1)**2 + (y2-y1)**2 )
     return distance
+
+""" ********************
+    **** Global Var ****
+    ******************** """
+# no data
+
+""" **************
+    **** Main ****
+    ************** """
+# no data
+
+
+
+
+
+
+
+
     
     
 

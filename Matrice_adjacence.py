@@ -1,8 +1,31 @@
+# -*- coding: utf-8 -*-
+"""
+************************
+@author : Gabin
+@contact : gabin.mondongou@auxlazaristeslasalle.fr
+created on : Tue Jan 10 20:47:32 2023
+last mod : 2022
+title : notitle
+goals : brief description
+to do : what should be done next time
+************************* """
 
+""" ********************
+    **** Imports ****
+    ******************** """
+    
 import numpy as np
 from Recuperation_donnees import distance
 
+""" ********************
+    **** Classes ****
+    ******************** """
+# no data
 
+""" ********************
+    **** Functions ****
+    ******************** """
+    
 def creation_matrice(lignes_infos,stations_infos): # Crée la matrice d'adjacence a partir de la liste des dico de stations et de la liste des dico de lignes
     
     matrice = np.zeros((len(stations_infos),len(stations_infos)))
@@ -36,3 +59,17 @@ def voisins(station1,station2,lignes_infos): # Renvoie True si les stations sont
                     flag = True
                     
     return flag    
+
+
+""" ********************
+    **** Global Var ****
+    ******************** """
+# no data
+
+""" **************
+    **** Main ****
+    ************** """
+# no data
+
+
+
