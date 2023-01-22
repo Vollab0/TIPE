@@ -17,23 +17,13 @@ to do : what should be done next time
 from Recuperation_donnees import recup
 from Matrice_adjacence import creation_matrice
 from Algo_Dijkstra import plus_court_chemin
+from Changements import changements
 
-from kivymd.app import MDApp
-from kivymd.uix.screen import Screen
-from kivymd.uix.button import MDRectangleFlatButton
 
 """ ********************
     **** Classes ****
     ******************** """
-
-class MyApp(MDApp):
-
-    def build(self):
-        screen = Screen()
-        btn_flat = MDRectangleFlatButton(text="Le chemin le plus court pour aller de " + depart + " à " + arrivee + " est " + str(chemin) + " et il fait " + str(distance) + " km.", pos_hint= {'center_x':0.5, 'center_y':0.5})
-        screen.add_widget(btn_flat)
-        return screen
-
+# no data
 
 """ ********************
     **** Functions ****
@@ -59,16 +49,16 @@ matrice,liste_stations_matrice = creation_matrice(lignes_infos, stations_infos)
     **** Main ****
     ************** """
 
+arrivee = input ("A quelle station aller ? \n")
+depart = input ("De quelle station partir ? \n")
 
-depart = "Perrache"
-arrivee = "Gare de Vaise"
 
 chemin_indices,distance = plus_court_chemin(matrice, liste_stations_matrice.index(depart), liste_stations_matrice.index(arrivee))
 
 chemin = [liste_stations_matrice[el] for el in chemin_indices]
 
+changements = changements(chemin,stations_infos,appartenance_ligne)
 
-#print("Le chemin le plus court pour aller de " + depart + " à " + arrivee + " est " + str(chemin) + " et il fait " + str(distance) + " km.")
-
-if __name__ == '__main__':
-    MyApp().run()
+print("Le chemin le plus court pour aller de " + depart + " à " + arrivee + " est " + str(chemin) + " et il fait " + str(distance) + " km.\n\nIl y a " + str(len(changements.keys())) + " changements :")
+for el in changements.keys() :
+    print("- à " + el + " du métro " + changements[el][0] + " au métro " + changements[el][1])
