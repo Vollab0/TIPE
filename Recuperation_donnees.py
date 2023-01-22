@@ -14,7 +14,7 @@ to do : what should be done next time
     **** Imports ****
     ******************** """
 import requests
-import math as m
+import numpy as np
 
 """ ********************
     **** Classes ****
@@ -114,7 +114,7 @@ def recup(lien_lignes,lien_arrets):
 def distance(station1,station2): # Calcul la distance entre deux stations
     x1,y1 = station1['geometry']['coordinates'][0],station1['geometry']['coordinates'][1]
     x2,y2 = station2['geometry']['coordinates'][0],station1['geometry']['coordinates'][1]
-    distance = m.sqrt( (x2-x1)**2 + (y2-y1)**2 )
+    distance = np.sqrt( (x2-x1)**2 + (y2-y1)**2 )
     return distance
 
 """ ********************
