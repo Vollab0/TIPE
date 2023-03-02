@@ -45,3 +45,20 @@ stations_infos,lignes_infos,codes_lignes = recup(lien_lignes, lien_arrets)
 
 matrice,liste_stations_matrice = creation_matrice(lignes_infos, stations_infos)
 
+""" **************
+    **** Main ****
+    ************** """
+
+arrivee = input ("A quelle station aller ? \n")
+depart = input ("De quelle station partir ? \n")
+
+
+chemin_indices,distance = plus_court_chemin(matrice, liste_stations_matrice.index(depart), liste_stations_matrice.index(arrivee))
+
+chemin = [liste_stations_matrice[el] for el in chemin_indices]
+
+changements = changements(chemin,stations_infos,appartenance_ligne)
+
+print("Le chemin le plus court pour aller de " + depart + " à " + arrivee + " est " + str(chemin) + " et il fait " + str(distance) + " km.\n\nIl y a " + str(len(changements.keys())) + " changements :")
+for el in changements.keys() :
+    print("- à " + el + " du métro " + changements[el][0] + " au métro " + changements[el][1])
