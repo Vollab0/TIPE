@@ -1,0 +1,58 @@
+MDScreen:
+    name: 'main'
+    MDFloatLayout:
+        size_hint: .8,.8
+        pos_hint: {"center_x": .5, "center_y": .5}
+        md_bg_color: 46, 204, 113,1.0
+
+        MDLabel:
+            text: "Où voulez vous aller ?"
+            font_name: "MPoppins"
+            pos_hint: {"center_x": .5, "center_y": .9}
+            font_size: dp(60)
+            color: rgba(52,0,231,255)
+                    
+    
+
+
+        MDTextField:
+            id: zone_texte_destination
+            font_name: "RPoppins"
+            pos_hint: {"center_x": .5, "center_y": .7}
+            hint_text: "Destination"
+            mode: "fill"
+
+        MDTextField:
+            id: zone_texte_depart
+            font_name: "RPoppins"
+            pos_hint: {"center_x": .5, "center_y": .6}
+            hint_text: "Départ"
+            mode: "fill"
+
+        Button:
+            font_name: "RPoppins"
+            font_size: dp(20)
+            text: "Rechercher"
+            size_hint: .6, .07
+            pos_hint: {"center_x": .5, "center_y": .5}
+            background_color: 0,0,0,0
+            canvas.before:
+                Color:
+                    rgb: rgba(52,0,231,255)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [5]
+            on_release: 
+                app.rechercher()
+                
+        
+        MDLabel:
+            text: app.resultat
+            font_name: "MPoppins"
+            pos_hint: {"center_x": .5, "center_y": .4}
+
+
+            
+
+        
