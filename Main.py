@@ -23,6 +23,8 @@ from Changements import changements
 
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
+from kivy.properties import StringProperty
+from kivy.properties import DictProperty
 from kivymd.theming import ThemeManager
 from kivy.uix.screenmanager import ScreenManager
 from kivymd.app import MDApp
@@ -45,11 +47,11 @@ def appartenance_ligne(station): # Renvoie les lignes auquelles appartient la st
     ligne = [ligne for ligne in list(lignes_infos.keys()) if station in lignes_infos[ligne]['stations']]
     return ligne
 
-def recherche_itineraire(depart,destination):
+def recherche_itineraire(depart,destination): # Renvoie le dictionnaire des changements, le chemin et la distance entre le depart et la destination 
     chemin_indices,distance = plus_court_chemin(matrice, liste_stations_matrice.index(depart), liste_stations_matrice.index(destination))
     chemin = [liste_stations_matrice[el] for el in chemin_indices]
-    changements = changements(chemin,stations_infos,appartenance_ligne)
-    return chemin,distance,changements
+    dico_changements = changements(chemin,appartenance_ligne)
+    return chemin,distance,dico_changements # dico_changement = {station : [ligne d'arrivé,ligne de départ]}
 
 
 
@@ -68,29 +70,18 @@ matrice,liste_stations_matrice = creation_matrice(lignes_infos, stations_infos)
     **** Main ****
     ************** """
 
-"""
-destination = input ("A quelle station aller ? \n")
-depart = input ("De quelle station partir ? \n")
-
-
-chemin,distance,changements = recherche_itineraire(depart,destination)
-
-print("Le chemin le plus court pour aller de " + depart + " à " + destination + " est " + str(chemin) + " et il fait " + str(distance) + " km.\n\nIl y a " + str(len(changements.keys())) + " changements :")
-for el in changements.keys() :
-    print("- à " + el + " du métro " + changements[el][0] + " au métro " + changements[el][1])
-"""
-
-
-
 class Application(MDApp):
 
-    resultat = ObjectProperty(None)
+    resultat = StringProperty() # Provisoire
     zone_texte_destination = ObjectProperty(None)
     zone_texte_depart = ObjectProperty(None)
 
-    def build(self):
+    dico_changements = DictProperty()
+    distance = ObjectProperty(None)
+    chemin = ObjectProperty(None)
 
-        self.resultat = ""
+
+    def build(self):
 
         self.theme_cls = ThemeManager()
 
@@ -102,16 +93,19 @@ class Application(MDApp):
         return gestion_pages # Affiche les pages
     
     def rechercher(self):
-
         
-        print("Bouton cliquer !")
+        page_principale = self.root.get_screen('main')
 
-        depart = self.zone_texte_destination.text # A remplacer en passant par 'main'
-        destination = self.zone_texte_depart.text
+        depart = page_principale.ids.zone_texte_depart.text
+        destination = page_principale.ids.zone_texte_destination.text
 
-        chemin,distance,changements = recherche_itineraire(depart,destination)
+        self.chemin,self.distance,self.dico_changements = recherche_itineraire(depart,destination)
 
-        self.resultat = str(chemin)
+        self.resultat = str(self.chemin) # Provisoire
+
+        print("Le chemin le plus court pour aller de " + depart + " à " + destination + " est " + str(self.chemin) + " et il fait " + str(self.distance) + " km.\n\nIl y a " + str(len(self.dico_changements.keys())) + " changements :")
+        for el in self.dico_changements.keys() :
+            print("- à " + el + " du métro " + self.dico_changements[el][0] + " au métro " + self.dico_changements[el][1])
         
 
     def quitter(self):

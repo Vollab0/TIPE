@@ -23,7 +23,7 @@ to do : what should be done next time
     **** Functions ****
     ******************** """
 
-def changements(chemin,stations_infos,fct_appartenance_ligne):
+def changements(chemin,fct_appartenance_ligne):
     liste_lignes = [fct_appartenance_ligne(el) for el in chemin]
     changements = {}
         
