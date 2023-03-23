@@ -30,13 +30,16 @@ from kivymd.theming import ThemeManager
 from kivy.uix.screenmanager import ScreenManager
 from kivymd.uix.list import MDList
 from kivymd.uix.label import MDLabel
+from kivymd.uix.menu import MDDropdownMenu
 from kivy.uix.image import AsyncImage
+from kivymd.uix.list import OneLineIconListItem
 from kivymd.uix.boxlayout import MDBoxLayout    
 from kivymd.app import MDApp
 from kivy.core.text import LabelBase
 from kivy.core.window import Window
 
-Window.size = (540, 1200)
+Window.size = (540, 1080)
+
 
 """ ********************
     **** Classes ****
@@ -75,6 +78,9 @@ matrice,liste_stations_matrice = creation_matrice(lignes_infos, stations_infos)
     **** Main ****
     ************** """
 
+class IconListItem(OneLineIconListItem):
+    icon = StringProperty()
+
 class Application(MDApp):
 
     resultat = StringProperty() # Provisoire
@@ -86,19 +92,74 @@ class Application(MDApp):
     chemin = ListProperty(['depart'])
 
 
+
     def build(self):
 
         self.theme_cls = ThemeManager()
 
-        gestion_pages = ScreenManager() # Gestion des differentes pages
-        gestion_pages.add_widget(Builder.load_file('page_principale.kv')) # Charge le premier ecran test.kv
-        gestion_pages.add_widget(Builder.load_file('page_resultats.kv')) # Charge le premier ecran test.kv
+        self.root = ScreenManager() # Gestion des differentes pages
+        self.root.add_widget(Builder.load_file('page_principale.kv')) # Charge le premier ecran test.kv
+        self.root.add_widget(Builder.load_file('page_resultats.kv')) # Charge le premier ecran test.kv
 
+        stations_clees = list(stations_infos.keys())
+        stations_triees = sorted(stations_clees)
+
+        liste_choix_station_depart = [
+            {
+                "viewclass": "IconListItem",
+                "icon": "Images/Metro.png",
+                "text": station,
+                "height": 50,
+                "font_name": 'SPoppins',
+                "on_release": lambda x=station: self.nom_station_depart(x),
+            } for station in stations_triees
+        ]
+        liste_choix_station_arrivee = [
+            {
+                "viewclass": "IconListItem",
+                "icon": "Images/Metro.png",
+                "text": station,
+                "height": 50,
+                "font_name": 'SPoppins',
+                "on_release": lambda x=station: self.nom_station_arrivee(x),
+            } for station in stations_triees
+        ]
+        self.menu_station_depart = MDDropdownMenu(
+            caller = self.root.get_screen('main').ids.choix_station_depart,
+            items = liste_choix_station_depart,
+            position = "center",
+            hor_growth=None,
+            ver_growth="down",
+            width_mult = 4,
+        )
+        self.menu_station_arrivee = MDDropdownMenu(
+            caller = self.root.get_screen('main').ids.choix_station_arrivee,
+            items = liste_choix_station_arrivee,
+            position = "center",
+            hor_growth=None,
+            ver_growth="down",
+            width_mult = 4,
+        )
         
-        return gestion_pages # Affiche les pages
-    
 
+        return self.root # Affiche les pages
     
+    def nom_station_depart(self, nom): # Cette fonction met a jour dynamiquement le nom de la station choisie et ferme le menu
+        page_principale = self.root.get_screen('main')
+        page_principale.ids.choix_station_depart.text = nom
+        self.item_depart = nom
+        self.menu_station_depart.dismiss()
+    
+    def nom_station_arrivee(self, nom): # Cette fonction met a jour dynamiquement le nom de la station choisie et ferme le menu
+        page_principale = self.root.get_screen('main')
+        page_principale.ids.choix_station_arrivee.text = nom
+        self.item_arrivee = nom
+        self.menu_station_arrivee.dismiss()
+
+    def inverser_stations(self):
+        page_principale = self.root.get_screen('main')
+        page_principale.ids.choix_station_arrivee.text,page_principale.ids.choix_station_depart.text = page_principale.ids.choix_station_depart.text,page_principale.ids.choix_station_arrivee.text
+
 
     def afficher_resultats(self):
         ligne_layout = self.root.get_screen('resultat').ids.ligne_layout
@@ -193,10 +254,8 @@ class Application(MDApp):
 
     def rechercher(self): # Renvoie le resultat de la recherche
         
-        page_principale = self.root.get_screen('main')
-
-        depart = page_principale.ids.zone_texte_depart.text
-        destination = page_principale.ids.zone_texte_destination.text
+        depart = self.item_depart
+        destination = self.item_arrivee
 
         self.chemin,self.distance,self.dico_changements = recherche_itineraire(depart,destination)
 
@@ -225,4 +284,7 @@ if __name__ == "__main__":
     Application().run()
 
 
-# PROBLEME : La sattion Henon ne semble pas exister...
+# PROBLEME : La station Henon ne semble pas exister...
+# Ajouter les funi
+
+

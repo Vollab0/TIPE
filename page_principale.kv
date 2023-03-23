@@ -1,55 +1,108 @@
 MDScreen:
     name: 'main'
     MDFloatLayout:
-        md_bg_color: 46, 204, 113, 10
-        size_hint: .7,.6
-        pos_hint: {"center_x": .5, "center_y": .5}
-        radius: [5]
-
+        md_bg_color: [1, 1, 1, 1.0]
         MDFloatLayout:
-            size_hint: (.8,.9)
-            pos_hint: {"center_x": .5, "center_y": .5}
+            size_hint: None, None
+            size: 350, 130
+            pos_hint: {"center_x": .5, "center_y": .75}
 
             MDLabel:
                 text: "Où voulez vous aller ?"
                 font_name: "MPoppins"
-                pos_hint: {"center_x": .5, "center_y": .9}
+                pos_hint: {"center_x": .5, "center_y": .5}
+                halign: 'center'
                 font_size: dp(60)
-                color: rgba(52,0,231,255)
-                    
-    
-        MDTextField:
-            id: zone_texte_destination
-            font_name: "RPoppins"
-            pos_hint: {"center_x": .5, "center_y": .6}
-            hint_text: "Destination"
-            font_name_hint_text:'RPoppins'
-            mode: "fill"
+                color: rgba(0,0,0,255)
 
-        MDTextField:
-            id: zone_texte_depart
-            font_name: "RPoppins"
-            pos_hint: {"center_x": .5, "center_y": .5}
-            hint_text: "Départ"
-            mode: "fill"
+
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint: .8, .04
+            pos_hint: {'center_y': .53, 'center_x':.5}
+
+            MDLabel:
+                text: 'Départ :'
+                font_name: "MPoppins"
+                font_size: dp(22)
+                halign: 'left'
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint: 1.7, 1
+                
+                MDRoundFlatButton:
+                    id: choix_station_depart
+                    text: 'Choisir station de départ'
+                    pos_hint: {'center_x': .5}
+                    font_name: "RPoppins"
+                    font_size: dp(18)
+                    theme_text_color: "Custom"
+                    text_color: "black"
+                    line_color: [.44, .44, .44, .44]
+                    line_width: 1
+                    on_release: app.menu_station_depart.open()
+
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint: .8, .04
+            pos_hint: {'center_y': .47, 'center_x':.5}
+
+            MDLabel:
+                text: 'Destination :'
+                font_name: "MPoppins"
+                font_size: dp(22)
+                halign: 'left'
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint: 1.7, 1
+                
+                MDRoundFlatButton:
+                    id: choix_station_arrivee
+                    text: "Choisir station d'arrivée"
+                    pos_hint: {'center_x': .5}
+                    font_name: "RPoppins"
+                    font_size: dp(18)
+                    theme_text_color: "Custom"
+                    text_color: "black"
+                    line_color: [.44, .44, .44, .44]
+                    line_width: 1
+                    on_release: app.menu_station_arrivee.open()
+
+        MDIconButton:
+            icon: "Images/Fleches.png"
+            icon_size: "40sp"
+            pos_hint: {'center_x': choix_station_arrivee.x, 'center_y':.5} ################################## <= a modifier ###########################
+            on_release: app.inverser_stations()
+
+
 
         Button:
-            font_name: "RPoppins"
-            font_size: dp(20)
+            font_name: "MPoppins"
+            font_size: dp(25)
             text: "Rechercher"
-            size_hint: .6, .07
-            pos_hint: {"center_x": .5, "center_y": .4}
+            size_hint: .8, .07
+            pos_hint: {"center_x": .5, "center_y": .3}
             background_color: 0,0,0,0
             canvas.before:
                 Color:
-                    rgb: rgba(52,0,231,255)
+                    rgb: rgba(48,121,194,255)
                 RoundedRectangle:
                     size: self.size
                     pos: self.pos
-                    radius: [5]
+                    radius: [14]
             on_release: 
-                app.rechercher()
+                app.rechercher()       
+
+
+
                 
+
+<IconListItem>
+    IconLeftWidget:
+        icon: root.icon
+
         
         # MDLabel:
         #     text: app.resultat
