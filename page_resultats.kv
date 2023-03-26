@@ -24,7 +24,7 @@ MDScreen:
                 halign: 'center'
                 text: app.chemin[0]
                 font_size: dp(25)
-                font_name: "BPoppins"
+                font_name: "MPoppins"
 
 
 
@@ -50,26 +50,26 @@ MDScreen:
                 halign: 'center'
                 text: app.chemin[-1]
                 font_size: dp(25)
-                font_name: "BPoppins"
+                font_name: "MPoppins"
             
 
         MDFloatLayout:
             pos_hint: {'center_x':.5, 'center_y':.1}
             radius: [14, 14, 14, 14]
-            md_bg_color: [ .74, .76, .78, .25]
+            #md_bg_color: [ .74, .76, .78, .25]
             size_hint_y: .1
             size_hint_x: .70
             MDLabel:
                 pos_hint:{'center_x':.5,'center_y':.7}
                 halign: 'center'
                 text: "Distance :"
-                font_size: dp(20)
+                font_size: dp(25)
                 font_name: "RPoppins"
             MDLabel:
                 pos_hint:{'center_x':.5,'center_y':.3}
                 halign: 'center'
                 text: str(app.distance)[:3] + " km"
-                font_size: dp(20)
+                font_size: dp(25)
                 font_name: "BPoppins"
             
         
