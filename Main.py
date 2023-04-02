@@ -15,21 +15,22 @@ to do : what should be done next time
     ******************** """
 import sys
 
+
 from Recuperation_donnees import recup
+from Recuperation_donnees import distance
 from Matrice_adjacence import creation_matrice
 from Algo_Dijkstra import plus_court_chemin
+from Verification_connexite import connexite
 from Changements import changements
 
 
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.properties import StringProperty
-from kivy.properties import DictProperty
 from kivy.properties import ListProperty
 from kivy.animation import Animation
 from kivymd.theming import ThemeManager
 from kivy.uix.screenmanager import ScreenManager
-from kivymd.uix.list import MDList
 from kivymd.uix.label import MDLabel
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.uix.image import AsyncImage
@@ -77,9 +78,17 @@ matrice,liste_stations_matrice = creation_matrice(lignes_infos, stations_infos)
 
 Couleurs = {'A': [.863, .235, .6, 1.0],'B': [.188, .474, .761, 1.0],'C': [.925, .58, .063, 1.0],'D': [.255, .666, .286, 1.0],'F': [.572, .776, .278, 1.0]} 
 
+distance_foch_massena = 691.19 # distance utilisée pour transformer les distances en EPSG:3946 en mètres
+distance_en_EPSG = distance(stations_infos['Foch'],stations_infos['Masséna'])
+facteur_distance = distance_foch_massena / distance_en_EPSG # calcul du facteur reliant les deux unitées de mesures
+
+vitesse_metro = 21
+
 """ **************
     **** Main ****
     ************** """
+
+connexite(matrice) # Verifie la connexité du graph
 
 class IconListItem(OneLineIconListItem):
     icon = StringProperty()
@@ -178,11 +187,6 @@ class Application(MDApp):
 
 
 
-# =================================================================== Affichage a améliorer ================================================================================
-
-
-
-
     def afficher_resultats(self):
         ligne_layout = self.root.get_screen('resultat').ids.ligne_layout
         ligne_layout.clear_widgets()
@@ -198,125 +202,43 @@ class Application(MDApp):
                 icone.size_hint = (None, None)
 
 
-                if len(self.dico_changements.keys()) == 1 :
+                dico_taille_images = {1: (250.5, 'moyenne.png'), 2: (150, 'courte.png'), 3: (120, 'courte.png')} # relie le nombre de changements (clées) aux images avec leurs hauteurs correspondantes (valeurs)
 
-                    image = AsyncImage(source='Images/LigneMetro'+ str(value[0][0]) + 'moyenne.png')
-                    image.texture_size = (92, 496)
-                    image.size_hint = (None, None)
+                taille_image = dico_taille_images[len(self.dico_changements.keys())]
+                image = AsyncImage(source=f'Images/LigneMetro{value[0][0]}{taille_image[1]}')
+                image.texture_size = (92, 496)
+                image.size_hint = (None, None)
+                image.width = 100
+                image.height = taille_image[0]
+                image.pos_hint = {'center_x': .5}
 
-                    image.width = 100
-                    image.height = 250.5
-                    image.pos_hint = {'center_x':.5}
+                Boite_image = MDBoxLayout(orientation='vertical', size_hint_x=.3)
+                Boite_image.add_widget(image)
 
-                    Boite_image = MDBoxLayout(orientation= 'vertical', size_hint_x= .3)
-                    Boite_image.add_widget(image)
+                icone.height = 35
+                icone.pos_hint = {'center_x': .6, 'center_y': .5}
+                Boite_icone = MDBoxLayout(orientation='horizontal', size_hint_x=.35)
+                Boite_icone.add_widget(icone)
 
-                    
-                    icone.height = 35
-                    icone.pos_hint = {'center_x': .6,'center_y': .5} # L'alignement selon x peut être amélioré
+                distance_entre_changements = distance(stations_infos[self.chemin[0]],stations_infos[key]) 
+                distance_en_metres = facteur_distance * distance_entre_changements
+                duree = distance_en_metres / ( vitesse_metro * 1000/60 ) # On convertie la vitesse du métro en metres / minutes
+                duree = round(duree) # on arrondit la durée en minutes
+                temps = MDLabel(text=str(duree) + ' min')
+                temps.font_name = 'MPoppins'
+                temps.font_size = '20sp'
+                temps.color = Couleurs[value[0][0]]
+                temps.pos_hint = {'x': 0, 'center_y': .5}
 
-                    Boite_icone = MDBoxLayout(orientation= 'horizontal', size_hint_x= .35)
-                    Boite_icone.add_widget(icone)
+                Boite_temps = MDBoxLayout(orientation='vertical', size_hint_x=.35)
+                Boite_temps.add_widget(temps)
 
-                    temps = MDLabel(text='4 min')
-                    temps.font_name = "MPoppins"
-                    temps.font_size = '20sp'
-                    temps.color = Couleurs[value[0][0]]
-                    temps.pos_hint = {'x': 0,'center_y': .5}
+                Boite = MDBoxLayout(orientation='horizontal', size_hint_x=.4, size_hint_y=None, height=image.height)
+                Boite.add_widget(Boite_temps)
+                Boite.add_widget(Boite_image)
+                Boite.add_widget(Boite_icone)
+                Boite.pos_hint = {'center_x': .5, 'center_y': .5}
 
-                    Boite_temps = MDBoxLayout(orientation= 'vertical', size_hint_x= .35)
-                    Boite_temps.add_widget(temps)
-                
-
-
-                    Boite = MDBoxLayout(orientation='horizontal',size_hint_x= .4,size_hint_y= None,height=image.height)
-
-                    Boite.add_widget(Boite_temps)
-                    Boite.add_widget(Boite_image)
-                    Boite.add_widget(Boite_icone)
-
-                    Boite.pos_hint = {'center_x':.5, 'center_y': .5}
-
-                elif len(self.dico_changements.keys()) == 2 :
-
-                    image = AsyncImage(source='Images/LigneMetro'+ str(value[0][0]) + 'courte.png')
-                    image.texture_size = (92, 496)
-                    image.size_hint = (None, None)
-
-                    image.width = 100
-                    image.height = 150
-                    image.pos_hint = {'center_x':.5}
-
-                    Boite_image = MDBoxLayout(orientation= 'vertical', size_hint_x= .3)
-                    Boite_image.add_widget(image)
-
-                    
-                    icone.height = 35
-                    icone.pos_hint = {'center_x': .6,'center_y': .5} # L'alignement selon x peut être amélioré
-
-                    Boite_icone = MDBoxLayout(orientation= 'horizontal', size_hint_x= .35)
-                    Boite_icone.add_widget(icone)
-
-                    temps = MDLabel(text='4 min')
-                    temps.font_name = "MPoppins"
-                    temps.font_size = '20sp'
-                    temps.color = Couleurs[value[0][0]]
-                    temps.pos_hint = {'x': 0,'center_y': .5}
-
-                    Boite_temps = MDBoxLayout(orientation= 'vertical', size_hint_x= .35)
-                    Boite_temps.add_widget(temps)
-                
-
-
-                    Boite = MDBoxLayout(orientation='horizontal',size_hint_x= .4,size_hint_y= None,height=image.height)
-
-                    Boite.add_widget(Boite_temps)
-                    Boite.add_widget(Boite_image)
-                    Boite.add_widget(Boite_icone)
-
-                    Boite.pos_hint = {'center_x':.5, 'center_y': .5}
-
-                elif len(self.dico_changements.keys()) == 3 :
-
-                    image = AsyncImage(source='Images/LigneMetro'+ str(value[0][0]) + 'courte.png')
-                    image.texture_size = (92, 496)
-                    image.size_hint = (None, None)
-
-                    image.width = 100
-                    image.height = 120
-                    image.pos_hint = {'center_x':.5}
-
-                    Boite_image = MDBoxLayout(orientation= 'vertical', size_hint_x= .3)
-                    Boite_image.add_widget(image)
-
-                    
-                    icone.height = 35
-                    icone.pos_hint = {'center_x': .6,'center_y': .5} # L'alignement selon x peut être amélioré
-
-                    Boite_icone = MDBoxLayout(orientation= 'horizontal', size_hint_x= .35)
-                    Boite_icone.add_widget(icone)
-
-                    temps = MDLabel(text='4 min')
-                    temps.font_name = "MPoppins"
-                    temps.font_size = '20sp'
-                    temps.color = Couleurs[value[0][0]]
-                    temps.pos_hint = {'x': 0,'center_y': .5}
-
-                    Boite_temps = MDBoxLayout(orientation= 'vertical', size_hint_x= .35)
-                    Boite_temps.add_widget(temps)
-                
-
-
-                    Boite = MDBoxLayout(orientation='horizontal',size_hint_x= .4,size_hint_y= None,height=image.height)
-
-                    Boite.add_widget(Boite_temps)
-                    Boite.add_widget(Boite_image)
-                    Boite.add_widget(Boite_icone)
-
-                    Boite.pos_hint = {'center_x':.5, 'center_y': .5}
-
-                
-                
                 ligne_layout.add_widget(Boite)
 
             
@@ -331,122 +253,46 @@ class Application(MDApp):
             icone.texture_size = (204, 112)
             icone.size_hint = (None, None)
             
-            if len(self.dico_changements.keys()) == 1 :
+            dico_taille_images = {1: (250.5, 'moyenne.png'), 2: (150, 'courte.png'), 3: (120, 'courte.png')} # relie le nombre de changements (clées) aux images avec leurs hauteurs correspondantes (valeurs)
 
-                image = AsyncImage(source='Images/LigneMetro'+ str(value[1][0]) + 'moyenne.png')
-                image.texture_size = (92, 496)
-                image.size_hint = (None, None)
+            taille_image = dico_taille_images[len(self.dico_changements.keys())]
 
-                image.width = 100
-                image.height = 250.5
-                image.pos_hint = {'center_x':.5}
+            image = AsyncImage(source=f'Images/LigneMetro{value[1][0]}{taille_image[1]}')
+            image.texture_size = (92, 496)
+            image.size_hint = (None, None)
 
-                Boite_image = MDBoxLayout(orientation= 'vertical', size_hint_x= .3)
-                Boite_image.add_widget(image)
+            image.width = 100
+            image.height = taille_image[0]
+            image.pos_hint = {'center_x':.5}
 
-                
-                icone.height = 35
-                icone.pos_hint = {'center_x': .6,'center_y': .5} # L'alignement selon x peut être amélioré
+            Boite_image = MDBoxLayout(orientation='vertical', size_hint_x=.3)
+            Boite_image.add_widget(image)
 
-                Boite_icone = MDBoxLayout(orientation= 'horizontal', size_hint_x= .35)
-                Boite_icone.add_widget(icone)
+            icone.height = 35
+            icone.pos_hint = {'center_x': .6, 'center_y': .5}  # L'alignement selon x peut être amélioré
 
-                temps = MDLabel(text='4 min')
-                temps.font_name = "MPoppins"
-                temps.font_size = '20sp'
-                temps.color = Couleurs[value[1][0]]
-                temps.pos_hint = {'x': 0,'center_y': .5}
+            Boite_icone = MDBoxLayout(orientation='horizontal', size_hint_x=.35)
+            Boite_icone.add_widget(icone)
 
-                Boite_temps = MDBoxLayout(orientation= 'vertical', size_hint_x= .35)
-                Boite_temps.add_widget(temps)
-            
+            distance_entre_changements = distance(stations_infos[key],stations_infos[list(self.dico_changements.keys())[list(self.dico_changements.keys()).index(key) - 1]])
+            distance_en_metres = facteur_distance * distance_entre_changements
+            duree = distance_en_metres / ( vitesse_metro * 1000/60 ) # On convertie la vitesse du métro en metres / minutes
+            duree = round(duree) # on arrondit la durée en minutes
+            temps = MDLabel(text=str(duree) + ' min')
+            temps.font_name = "MPoppins"
+            temps.font_size = '20sp'
+            temps.color = Couleurs[value[1][0]]
+            temps.pos_hint = {'x': 0, 'center_y': .5}
 
+            Boite_temps = MDBoxLayout(orientation='vertical', size_hint_x=.35)
+            Boite_temps.add_widget(temps)
 
-                Boite = MDBoxLayout(orientation='horizontal',size_hint_x= .4,size_hint_y= None,height=image.height)
+            Boite = MDBoxLayout(orientation='horizontal', size_hint_x=.4, size_hint_y=None, height=image.height)
+            Boite.add_widget(Boite_temps)
+            Boite.add_widget(Boite_image)
+            Boite.add_widget(Boite_icone)
 
-                Boite.add_widget(Boite_temps)
-                Boite.add_widget(Boite_image)
-                Boite.add_widget(Boite_icone)
-
-                Boite.pos_hint = {'center_x':.5, 'center_y': .5}
-
-            elif len(self.dico_changements.keys()) == 2 :
-                image = AsyncImage(source='Images/LigneMetro'+ str(value[1][0]) + 'courte.png')
-                image.texture_size = (92, 496)
-                image.size_hint = (None, None)
-
-                image.width = 100
-                image.height = 150
-                image.pos_hint = {'center_x':.5}
-
-                Boite_image = MDBoxLayout(orientation= 'vertical', size_hint_x= .3)
-                Boite_image.add_widget(image)
-
-                
-                icone.height = 35
-                icone.pos_hint = {'center_x': .6,'center_y': .5} # L'alignement selon x peut être amélioré
-
-                Boite_icone = MDBoxLayout(orientation= 'horizontal', size_hint_x= .35)
-                Boite_icone.add_widget(icone)
-
-                temps = MDLabel(text='4 min')
-                temps.font_name = "MPoppins"
-                temps.font_size = '20sp'
-                temps.color = Couleurs[value[1][0]]
-                temps.pos_hint = {'x': 0,'center_y': .5}
-
-                Boite_temps = MDBoxLayout(orientation= 'vertical', size_hint_x= .35)
-                Boite_temps.add_widget(temps)
-            
-
-
-                Boite = MDBoxLayout(orientation='horizontal',size_hint_x= .4,size_hint_y= None,height=image.height)
-
-                Boite.add_widget(Boite_temps)
-                Boite.add_widget(Boite_image)
-                Boite.add_widget(Boite_icone)
-
-                Boite.pos_hint = {'center_x':.5, 'center_y': .5}
-            
-            
-            elif len(self.dico_changements.keys()) == 3 :
-
-                image = AsyncImage(source='Images/LigneMetro'+ str(value[1][0]) + 'courte.png')
-                image.texture_size = (92, 496)
-                image.size_hint = (None, None)
-
-                image.width = 100
-                image.height = 120
-                image.pos_hint = {'center_x':.5}
-
-                Boite_image = MDBoxLayout(orientation= 'vertical', size_hint_x= .3)
-                Boite_image.add_widget(image)
-
-                
-                icone.height = 35
-                icone.pos_hint = {'center_x': .6,'center_y': .5} # L'alignement selon x peut être amélioré
-
-                Boite_icone = MDBoxLayout(orientation= 'horizontal', size_hint_x= .35)
-                Boite_icone.add_widget(icone)
-
-                temps = MDLabel(text='4 min')
-                temps.font_name = "MPoppins"
-                temps.font_size = '20sp'
-                temps.color = Couleurs[value[1][0]]
-                temps.pos_hint = {'x': 0,'center_y': .5}
-
-                Boite_temps = MDBoxLayout(orientation= 'vertical', size_hint_x= .35)
-                Boite_temps.add_widget(temps)
-            
-
-
-                Boite = MDBoxLayout(orientation='horizontal',size_hint_x= .4,size_hint_y= None,height=image.height)
-
-                Boite.add_widget(Boite_temps)
-                Boite.add_widget(Boite_image)
-                Boite.add_widget(Boite_icone)
-
-                Boite.pos_hint = {'center_x':.5, 'center_y': .5}
+            Boite.pos_hint = {'center_x': .5, 'center_y': .5}
 
 
 
@@ -482,7 +328,11 @@ class Application(MDApp):
             Boite_icone = MDBoxLayout(orientation= 'horizontal', size_hint= (.35,1))
             Boite_icone.add_widget(icone)
 
-            temps = MDLabel(text='4 min')
+            distance_entre_changements = distance(stations_infos[self.chemin[0]],stations_infos[self.chemin[-1]])
+            distance_en_metres = facteur_distance * distance_entre_changements
+            duree = distance_en_metres / ( vitesse_metro * 1000/60 ) # On convertie la vitesse du métro en metres / minutes
+            duree = round(duree) # on arrondit la durée en minutes
+            temps = MDLabel(text=str(duree) + ' min')
             temps.font_name = "MPoppins"
             temps.font_size = '20sp'
             temps.color = Couleurs[ligne_en_commun[0]]
@@ -502,37 +352,49 @@ class Application(MDApp):
 
 
 
-#======================================================================================================================================================================================
-
-
-
-
 
     def rechercher(self): # Renvoie le resultat de la recherche
         
-        depart = self.item_depart
-        destination = self.item_arrivee
+        try: # essaie d'executer le code suivant 
+            depart = self.item_depart
+            destination = self.item_arrivee
 
-        if depart == destination:
+        except AttributeError: # code qui s'execute si l'erreur AttributeError est detectée, càd si les stations n'ont pas été selectionnée
             popup = self.root.get_screen('main').ids.popup
             popup_text = self.root.get_screen('main').ids.popup_text
-            popup_text.text = 'Merci de choisir deux stations différentes...'
+            popup_text.text = 'Veuillez selectionner les stations demandées'
 
             anim = Animation(opacity = 1, duration = 0.3)
             anim.start(popup)
+
+        else: # code qui s'execute si il n'y a pas d'erreur
             
-            
-        else:
-            self.chemin,self.distance,self.dico_changements = recherche_itineraire(depart,destination)
+            if depart == destination:
+                popup = self.root.get_screen('main').ids.popup
+                popup_text = self.root.get_screen('main').ids.popup_text
+                popup_text.text = 'Merci de choisir deux stations différentes...'
 
-            self.root.transition.direction = 'left'
-            self.root.current = 'resultat'
+                anim = Animation(opacity = 1, duration = 0.3)
+                anim.start(popup)
+                
+                
+            else:
+                self.chemin,self.distance,self.dico_changements = recherche_itineraire(depart,destination)
 
-            self.afficher_resultats()
+                
+                self.distance = (self.distance * facteur_distance) / 1000 # on met en km
+                self.distance = round(self.distance,1)
+                
 
-            print("Le chemin le plus court pour aller de " + depart + " à " + destination + " est " + str(self.chemin) + " et il fait " + str(self.distance) + " km.\n\nIl y a " + str(len(self.dico_changements.keys())) + " changements :")
-            for el in self.dico_changements.keys() :
-                print("- à " + el + " du métro " + self.dico_changements[el][0] + " au métro " + self.dico_changements[el][1])
+                self.root.transition.direction = 'left'
+                self.root.current = 'resultat'
+
+                self.afficher_resultats()
+
+                print("Le chemin le plus court pour aller de " + depart + " à " + destination + " est " + str(self.chemin) + " et il fait " + str(self.distance) + " km.\n\nIl y a " + str(len(self.dico_changements.keys())) + " changements :")
+                for el in self.dico_changements.keys() :
+                    print("- à " + el + " du métro " + self.dico_changements[el][0] + " au métro " + self.dico_changements[el][1])
+        
         
 
 
