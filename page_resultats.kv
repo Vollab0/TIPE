@@ -1,0 +1,81 @@
+MDScreen:
+    name: 'resultat'
+    MDFloatLayout:
+        md_bg_color: [1, 1, 1, 1.0]
+        MDIconButton:
+            icon: "arrow-left"
+
+
+            pos_hint:{'x':0,'y': .95}
+            user_font_size: '100sp'
+            size_hint: (None, None)
+            size: (dp(100), dp(100)) # remplacer 100 par la taille souhaitée
+
+            on_release:
+                root.manager.transition.direction = 'right'
+                root.manager.current = 'main'
+
+        MDFloatLayout:
+            pos_hint: {'center_x':.5, 'center_y':.90}
+            radius: [14, 14, 14, 14]
+            md_bg_color: [ .74, .76, .78, .25]
+            size_hint_y: .065
+            size_hint_x: .70
+            MDLabel:
+                pos_hint:{'center_x':.5,'center_y':.5}
+                halign: 'center'
+                text: app.chemin[0]
+                font_size: dp(30)
+                font_name: "BPoppins"
+
+
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            pos_hint: {'center_x': .5,'center_y': .56}
+            size_hint_y: .55
+            size_hint_x: 1
+            id: ligne_layout
+            padding: dp(1)
+            spacing: dp(1)
+
+
+
+        MDFloatLayout:
+            pos_hint: {'center_x':.5, 'center_y':.23}
+            radius: [14, 14, 14, 14]
+            md_bg_color: [ .74, .76, .78, .25]
+            size_hint_y: .065
+            size_hint_x: .70
+            MDLabel:
+                pos_hint:{'center_x':.5,'center_y':.5}
+                halign: 'center'
+                text: app.chemin[-1]
+                font_size: dp(30)
+                font_name: "BPoppins"
+            
+
+        MDFloatLayout:
+            pos_hint: {'center_x':.5, 'center_y':.1}
+            radius: [14, 14, 14, 14]
+            md_bg_color: [ .74, .76, .78, .25]
+            size_hint_y: .1
+            size_hint_x: .70
+            MDLabel:
+                pos_hint:{'center_x':.5,'center_y':.7}
+                halign: 'center'
+                text: "Distance :"
+                font_size: dp(20)
+                font_name: "RPoppins"
+            MDLabel:
+                pos_hint:{'center_x':.5,'center_y':.3}
+                halign: 'center'
+                text: str(app.distance)[:3] + " km"
+                font_size: dp(20)
+                font_name: "BPoppins"
+            
+        
+
+
+
+

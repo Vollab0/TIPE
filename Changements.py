@@ -23,7 +23,7 @@ to do : what should be done next time
     **** Functions ****
     ******************** """
 
-def changements(chemin,stations_infos,fct_appartenance_ligne):
+def changements(chemin,fct_appartenance_ligne):
     liste_lignes = [fct_appartenance_ligne(el) for el in chemin]
     changements = {}
         
@@ -36,11 +36,15 @@ def changements(chemin,stations_infos,fct_appartenance_ligne):
             if len(el) == 1:
                 prochaine_ligne = el[0]
             else :
-                prochaine_ligne = liste_lignes[liste_lignes.index(el)+1][0]
+                if liste_lignes.index(el) == len(liste_lignes)-1: # Condition rajoutée
+                    prochaine_ligne = None                        # 
+                else:                                             # 
+                    prochaine_ligne = liste_lignes[liste_lignes.index(el)+1][0]
+
             changements[chemin[liste_lignes.index(el)-1]] = ligne_actuelle,prochaine_ligne
             ligne_actuelle = prochaine_ligne
     
-    return changements
+    return changements  # clée = station, valeurs = (ligne_arrivé,ligne_depart)
     
 
 """ ********************

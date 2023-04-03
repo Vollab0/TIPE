@@ -1,0 +1,4 @@
+git checkout : changer de branche
+git branch : creer une nouvelle branche
+git commit -a -m 'commentaire' : met tous les fichiers en attente d'envoi
+git push : pousse les fichiers en attente sur le repository
