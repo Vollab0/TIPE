@@ -40,7 +40,7 @@ from kivymd.app import MDApp
 from kivy.core.text import LabelBase
 from kivy.core.window import Window
 
-Window.size = (540, 1080)
+Window.size = (1080, 2160)
 
 
 """ ********************
@@ -391,9 +391,9 @@ class Application(MDApp):
 
                 self.afficher_resultats()
 
-                print("Le chemin le plus court pour aller de " + depart + " à " + destination + " est " + str(self.chemin) + " et il fait " + str(self.distance) + " km.\n\nIl y a " + str(len(self.dico_changements.keys())) + " changements :")
-                for el in self.dico_changements.keys() :
-                    print("- à " + el + " du métro " + self.dico_changements[el][0] + " au métro " + self.dico_changements[el][1])
+                #print("Le chemin le plus court pour aller de " + depart + " à " + destination + " est " + str(self.chemin) + " et il fait " + str(self.distance) + " km.\n\nIl y a " + str(len(self.dico_changements.keys())) + " changements :")
+                #for el in self.dico_changements.keys() :
+                 #   print("- à " + el + " du métro " + self.dico_changements[el][0] + " au métro " + self.dico_changements[el][1])
         
         
 

@@ -23,6 +23,7 @@ to do : what should be done next time
 """ ********************
     **** Functions ****
     ******************** """
+
 def parcours_profondeur(matrice, debut, visite=None):
     if visite is None:
         visite = set()
