@@ -36,7 +36,7 @@ from kivymd.app import MDApp
 from kivy.core.text import LabelBase
 from kivy.core.window import Window
 
-Window.size = (540, 1200)
+
 
 """ ********************
     **** Classes ****
