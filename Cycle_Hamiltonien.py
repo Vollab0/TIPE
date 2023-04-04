@@ -3,7 +3,7 @@
 ************************
 @author : Gabin
 @contact : gabin.mondongou@auxlazaristeslasalle.fr
-created on : Tue Mar 21 10:25:51 2023
+created on : Tue Apr 04 10:46:21 2023
 last mod : 2023
 title : notitle
 goals : brief description
@@ -13,7 +13,7 @@ to do : what should be done next time
 """ ********************
     **** Imports ****
     ******************** """
-# no data
+# no data0
 
 """ ********************
     **** Classes ****
@@ -24,19 +24,14 @@ to do : what should be done next time
     **** Functions ****
     ******************** """
 
-def parcours_profondeur(matrice, debut, visite=None):
-    if visite is None:
-        visite = set()
-    visite.add(debut)
-    for voisin in range(len(matrice)):
-        if matrice[debut][voisin] == 1 and voisin not in visite:
-            parcours_profondeur(matrice, voisin, visite)
-    return visite
+def condition_Dirac(matrice): # Verifie la condition de Dirac qui dit qu'un cylce hamiltonien peut exister seuleument si deg(sommet) >= n/2
+    matrice_ligne_sans_zeros = [[el for el in ligne if el != 0] for ligne in matrice]
+    for i in range(len(matrice)):
+        if len(matrice_ligne_sans_zeros[i]) < (len(matrice)/2): # la matrice est symetrique donc len(matrice) correspond au nombre de sommets
+            return False
+    return True      
+        
 
-def connexite(matrice):
-    noeud_depart = 0
-    accessible = parcours_profondeur(matrice, noeud_depart)
-    return len(accessible) == len(matrice)
    
 """ ********************
     **** Global Var ****
@@ -46,9 +41,4 @@ def connexite(matrice):
 """ **************
     **** Main ****
     ************** """
-
-
-
-
-
-
+# no data

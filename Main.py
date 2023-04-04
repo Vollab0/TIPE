@@ -21,6 +21,7 @@ from Recuperation_donnees import distance
 from Matrice_adjacence import creation_matrice
 from Algo_Dijkstra import plus_court_chemin
 from Verification_connexite import connexite
+from Cycle_Hamiltonien import condition_Dirac
 from Changements import changements
 
 
@@ -40,7 +41,7 @@ from kivymd.app import MDApp
 from kivy.core.text import LabelBase
 from kivy.core.window import Window
 
-Window.size = (1080, 2160)
+Window.size = (540, 1080)
 
 
 """ ********************
@@ -88,7 +89,15 @@ vitesse_metro = 21
     **** Main ****
     ************** """
 
-connexite(matrice) # Verifie la connexité du graph
+if connexite(matrice): # Verifie la connexité du graph
+    print('graphe connexe')
+else :
+    print('graphe non connexe')
+    
+if condition_Dirac(matrice):
+    print('Il existe un cycle Hamiltonien')
+else:
+    print("Il n'existe pas de cycle Hamiltonien")
 
 class IconListItem(OneLineIconListItem):
     icon = StringProperty()
