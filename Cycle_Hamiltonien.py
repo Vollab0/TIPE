@@ -13,7 +13,7 @@ to do : what should be done next time
 """ ********************
     **** Imports ****
     ******************** """
-# no data
+# no data0
 
 """ ********************
     **** Classes ****
@@ -23,9 +23,13 @@ to do : what should be done next time
 """ ********************
     **** Functions ****
     ******************** """
-def condition_Dirac(matrice):
-    taille_matrice = len(matrice)
-    for i in range(taille_matrice):
+
+def condition_Dirac(matrice): # Verifie la condition de Dirac qui dit qu'un cylce hamiltonien peut exister seuleument si deg(sommet) >= n/2
+    matrice_ligne_sans_zeros = [[el for el in ligne if el != 0] for ligne in matrice]
+    for i in range(len(matrice)):
+        if len(matrice_ligne_sans_zeros[i]) < (len(matrice)/2): # la matrice est symetrique donc len(matrice) correspond au nombre de sommets
+            return False
+    return True      
         
 
    

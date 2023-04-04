@@ -21,6 +21,7 @@ from Recuperation_donnees import distance
 from Matrice_adjacence import creation_matrice
 from Algo_Dijkstra import plus_court_chemin
 from Verification_connexite import connexite
+from Cycle_Hamiltonien import condition_Dirac
 from Changements import changements
 
 
@@ -92,6 +93,11 @@ if connexite(matrice): # Verifie la connexité du graph
     print('graphe connexe')
 else :
     print('graphe non connexe')
+    
+if condition_Dirac(matrice):
+    print('Il existe un cycle Hamiltonien')
+else:
+    print("Il n'existe pas de cycle Hamiltonien")
 
 class IconListItem(OneLineIconListItem):
     icon = StringProperty()
