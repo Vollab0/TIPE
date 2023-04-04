@@ -36,10 +36,7 @@ def parcours_profondeur(matrice, debut, visite=None):
 def connexite(matrice):
     noeud_depart = 0
     accessible = parcours_profondeur(matrice, noeud_depart)
-    if len(accessible) == len(matrice) :
-        print("Le graphe est connexe")
-    else:
-        print("Le graphe n'est pas connexe")
+    return len(accessible) == len(matrice)
    
 """ ********************
     **** Global Var ****

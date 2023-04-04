@@ -40,7 +40,7 @@ from kivymd.app import MDApp
 from kivy.core.text import LabelBase
 from kivy.core.window import Window
 
-Window.size = (1080, 2160)
+Window.size = (540, 1080)
 
 
 """ ********************
@@ -88,7 +88,10 @@ vitesse_metro = 21
     **** Main ****
     ************** """
 
-connexite(matrice) # Verifie la connexité du graph
+if connexite(matrice): # Verifie la connexité du graph
+    print('graphe connexe')
+else :
+    print('graphe non connexe')
 
 class IconListItem(OneLineIconListItem):
     icon = StringProperty()
