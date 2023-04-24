@@ -20,13 +20,13 @@ from Recuperation_donnees import recup
 from Recuperation_donnees import distance
 from Matrice_adjacence import creation_matrice
 from Algo_PCC import dijkstra_mat
-from Verification_connexite import connexite
-from Cycle_Hamiltonien import condition_Dirac
-from Densite import densite
-from Centralite import centralite
+from Verifications import connexite
+from Verifications import condition_Dirac
+from Verifications import densite
+from Verifications import centralite
 from Changements import changements
 
-"""
+
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.properties import StringProperty
@@ -44,7 +44,7 @@ from kivy.core.text import LabelBase
 from kivy.core.window import Window
 
 Window.size = (540, 1080)
-"""
+
 
 """ ********************
     **** Classes ****
@@ -65,7 +65,6 @@ def recherche_itineraire(depart,destination): # Renvoie le dictionnaire des chan
     chemin = [liste_stations_matrice[el] for el in chemin_indices]
     dico_changements = changements(chemin,appartenance_ligne)
     return chemin,distance,dico_changements # dico_changement = {station : [ligne d'arrivé,ligne de départ]}
-
 
 
 """ ********************
@@ -111,12 +110,9 @@ else:
 dico_centralite={}
 for i in centralite(matrice).keys():
     dico_centralite[liste_stations_matrice[i]]=centralite(matrice)[i]
-print(dico_centralite)
+print('Les sommets principaux sont:',dico_centralite)
 
 
-print(recherche_itineraire("Cuire","Foch"))
-
-"""
 
 class IconListItem(OneLineIconListItem):
     icon = StringProperty()
@@ -437,6 +433,6 @@ if __name__ == "__main__":
     LabelBase.register("BPoppins", "Poppins/Poppins-SemiBold.ttf")
     Application().run()
 
-"""
+
 
 
