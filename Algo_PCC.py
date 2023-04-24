@@ -158,6 +158,7 @@ def Astar(matrice,debut,fin):
     **** Main ****
     ************** """
 
+'''
 mat=np.array([[0,1,2,0,0],
                     [0,0,0,3,0],
                     [0,0,0,1,0],
@@ -169,3 +170,4 @@ print(mat_to_dico(mat))
 print(dijkstra_mat(mat,0,4))
 print(voisins(mat,0))
 print(Astar(mat,0,4))
+'''

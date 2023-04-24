@@ -19,14 +19,14 @@ import sys
 from Recuperation_donnees import recup
 from Recuperation_donnees import distance
 from Matrice_adjacence import creation_matrice
-from Algo_Dijkstra import plus_court_chemin
+from Algo_PCC import dijkstra_mat
 from Verification_connexite import connexite
 from Cycle_Hamiltonien import condition_Dirac
 from Densite import densite
 from Centralite import centralite
 from Changements import changements
 
-
+"""
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.properties import StringProperty
@@ -44,7 +44,7 @@ from kivy.core.text import LabelBase
 from kivy.core.window import Window
 
 Window.size = (540, 1080)
-
+"""
 
 """ ********************
     **** Classes ****
@@ -61,7 +61,7 @@ def appartenance_ligne(station): # Renvoie les lignes auquelles appartient la st
     return ligne
 
 def recherche_itineraire(depart,destination): # Renvoie le dictionnaire des changements, le chemin et la distance entre le depart et la destination 
-    chemin_indices,distance = plus_court_chemin(matrice, liste_stations_matrice.index(depart), liste_stations_matrice.index(destination))
+    chemin_indices,distance = dijkstra_mat(matrice, liste_stations_matrice.index(depart), liste_stations_matrice.index(destination))
     chemin = [liste_stations_matrice[el] for el in chemin_indices]
     dico_changements = changements(chemin,appartenance_ligne)
     return chemin,distance,dico_changements # dico_changement = {station : [ligne d'arrivé,ligne de départ]}
@@ -91,10 +91,10 @@ vitesse_metro = 21
     **** Main ****
     ************** """
 
-if connexite(matrice): # Verifie la connexité du graph
-    print('Le graphe connexe')
+if connexite(matrice): # Verifie la connexité du graphe
+    print('Le graphe est connexe')
 else :
-    print('Le graphe non connexe')
+    print('Le graphe est non connexe')
     
 if condition_Dirac(matrice):
     print('Il existe un cycle Hamiltonien')
@@ -114,6 +114,9 @@ for i in centralite(matrice).keys():
 print(dico_centralite)
 
 
+print(recherche_itineraire("Cuire","Foch"))
+
+"""
 
 class IconListItem(OneLineIconListItem):
     icon = StringProperty()
@@ -434,6 +437,6 @@ if __name__ == "__main__":
     LabelBase.register("BPoppins", "Poppins/Poppins-SemiBold.ttf")
     Application().run()
 
-
+"""
 
 
