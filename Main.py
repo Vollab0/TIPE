@@ -22,6 +22,7 @@ from Matrice_adjacence import creation_matrice
 from Algo_Dijkstra import plus_court_chemin
 from Verification_connexite import connexite
 from Cycle_Hamiltonien import condition_Dirac
+from Densite import densite
 from Changements import changements
 
 
@@ -98,6 +99,14 @@ if condition_Dirac(matrice):
     print('Il existe un cycle Hamiltonien')
 else:
     print("Il n'existe pas de cycle Hamiltonien")
+
+if densite(matrice)<0.2:
+    print('Le graphe est creux')
+elif densite(matrice)>0.5:
+    print("Le graphe est dense")
+else:
+    print("Le graphe n'est ni dense, ni creux")
+
 
 class IconListItem(OneLineIconListItem):
     icon = StringProperty()
