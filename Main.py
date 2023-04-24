@@ -23,6 +23,7 @@ from Algo_Dijkstra import plus_court_chemin
 from Verification_connexite import connexite
 from Cycle_Hamiltonien import condition_Dirac
 from Densite import densite
+from Centralite import centralite
 from Changements import changements
 
 
@@ -91,9 +92,9 @@ vitesse_metro = 21
     ************** """
 
 if connexite(matrice): # Verifie la connexité du graph
-    print('graphe connexe')
+    print('Le graphe connexe')
 else :
-    print('graphe non connexe')
+    print('Le graphe non connexe')
     
 if condition_Dirac(matrice):
     print('Il existe un cycle Hamiltonien')
@@ -106,6 +107,12 @@ elif densite(matrice)>0.5:
     print("Le graphe est dense")
 else:
     print("Le graphe n'est ni dense, ni creux")
+
+dico_centralite={}
+for i in centralite(matrice).keys():
+    dico_centralite[liste_stations_matrice[i]]=centralite(matrice)[i]
+print(dico_centralite)
+
 
 
 class IconListItem(OneLineIconListItem):
