@@ -35,27 +35,39 @@ def voisins(matrice,sommet):
 def Astar(matrice,debut,fin):
     openlist=[debut]
     closedlist=[]
-    h_cout={debut:0}
-    f_cout={0:9, 1:5, 2:6, 3:4, 4:0}
+    parents={}
+    poids={debut:0}
+    heuristique={0:9, 1:5, 2:6, 3:4, 4:0}
     
     while len(openlist)!=0:
-
-        for i in range(len(openlist)):
-            cout=float('inf')
-            if h_cout[i]+f_cout[i]<cout:
-                cout=h_cout[i]+f_cout[i]
-                noeud_act=i
-            if i == fin:
-                return 'Cool'
+   
+        cout = float("inf")
+        for noeud in openlist:
+            if poids[noeud]+heuristique[noeud]<cout:
+                cout=poids[noeud]+heuristique[noeud]
+                noeud_act=noeud
             
+        if noeud_act == fin:
+            chemin=[fin]
+            dernier = fin
+            while dernier != debut:
+                chemin.append(parents[dernier])
+                dernier = parents[dernier]
+            return chemin[::-1]
+
+        closedlist.append(noeud_act)
+        openlist.remove(noeud_act)
                 
-            for j in range(len(voisins(matrice,i))):
-                h_cout[j]=matrice[i][j]
-
-
-
-
-
+        for voi in voisins(matrice,noeud_act):
+            if voi not in closedlist:
+                new_poids = poids[noeud_act] + matrice[noeud][voi]
+            if voi not in openlist or new_poids < poids[voi]:
+                parents[voi] = noeud_act
+                poids[voi] = new_poids
+                if voi not in openlist:
+                    openlist.append(voi)
+    
+    return 'Nope'
 
 
 """ ********************
@@ -68,12 +80,12 @@ def Astar(matrice,debut,fin):
     **** Main ****
     ************** """
 
-mat_graph=np.array([[0,1,0,0,0],
+mat_graph=np.array([[0,1,2,0,0],
                     [0,0,0,3,0],
-                    [2,0,0,1,0],
-                    [3,1,0,0,3],
+                    [0,0,0,1,0],
+                    [0,0,0,0,3],
                     [0,2,1,0,0]])
 
 
-print(voisins(mat_graph,2))
-
+"""print(voisins(mat_graph,2))"""
+print(Astar(mat_graph,4,3))
