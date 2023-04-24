@@ -73,9 +73,9 @@ def mat_to_dico(matrice):
 
 ##########
 
-def dijkstra_dic(graph,depart,arrivee):
-    
-    distances = {sommet : float('inf') for sommet in graph}
+def dijkstra_dic(graphe,depart,arrivee):
+    dico=mat_to_dico(graphe)
+    distances = {sommet : float('inf') for sommet in dico}
     distances[depart] = 0
     heap = [(0, depart)]
     sommet_pre = {}
@@ -93,7 +93,7 @@ def dijkstra_dic(graph,depart,arrivee):
             chemin.insert(0, depart)
             return (chemin, distance_act)
         
-        for voisins, distance in graph[sommet_act].items():
+        for voisins, distance in dico[sommet_act].items():
             distance_temp = distances[sommet_act] + distance
             
             if distance_temp < distances[voisins]:
@@ -157,17 +157,3 @@ def Astar(matrice,debut,fin):
 """ **************
     **** Main ****
     ************** """
-
-'''
-mat=np.array([[0,1,2,0,0],
-                    [0,0,0,3,0],
-                    [0,0,0,1,0],
-                    [0,0,0,0,3],
-                    [0,2,1,0,0]])
-
-print(dijkstra_mat(mat,0,4))
-print(mat_to_dico(mat))
-print(dijkstra_mat(mat,0,4))
-print(voisins(mat,0))
-print(Astar(mat,0,4))
-'''

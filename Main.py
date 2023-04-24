@@ -94,23 +94,24 @@ if connexite(matrice): # Verifie la connexité du graphe
     print('Le graphe est connexe')
 else :
     print('Le graphe est non connexe')
-    
+
+if densite(matrice)<0.15:
+    print('Le graphe est creux')
+elif densite(matrice)>0.5:
+    print("Le graphe est dense")
+else:
+    print("Le graphe n'est ni dense, ni creux")  
+
 if condition_Dirac(matrice):
     print('Il existe un cycle Hamiltonien')
 else:
     print("Il n'existe pas de cycle Hamiltonien")
 
-if densite(matrice)<0.2:
-    print('Le graphe est creux')
-elif densite(matrice)>0.5:
-    print("Le graphe est dense")
-else:
-    print("Le graphe n'est ni dense, ni creux")
-
 dico_centralite={}
 for i in centralite(matrice).keys():
     dico_centralite[liste_stations_matrice[i]]=centralite(matrice)[i]
 print('Les sommets principaux sont:',dico_centralite)
+
 
 
 
@@ -432,7 +433,4 @@ if __name__ == "__main__":
     LabelBase.register("MPoppins", "Poppins/Poppins-Medium.ttf") 
     LabelBase.register("BPoppins", "Poppins/Poppins-SemiBold.ttf")
     Application().run()
-
-
-
 

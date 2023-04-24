@@ -27,19 +27,19 @@ to do :
 
 ##### Connexité #####
 
-def parcours_profondeur(matrice, debut, visite=None):
-    if visite is None:
-        visite = set()
-    visite.add(debut)
-    for voisin in range(len(matrice)):
-        if matrice[debut][voisin] == 1 and voisin not in visite:
-            parcours_profondeur(matrice, voisin, visite)
-    return visite
+def parcours_profondeur(graphe, accessible, debut):
+    accessible[debut] = True
+    for voisins in range(len(graphe)):
+        if graphe[debut][voisins] and not accessible[voisins]:
+            parcours_profondeur(graphe, accessible, voisins)
 
-def connexite(matrice):
-    noeud_depart = 0
-    accessible = parcours_profondeur(matrice, noeud_depart)
-    return len(accessible) == len(matrice)
+def connexite(graphe):
+    visite = [False] * len(graphe)
+    parcours_profondeur(graphe, visite, 0)
+    for sommet in visite:
+        if not sommet:
+            return False
+    return True
 
 ##### Cycle Hamoltonien #####
 
