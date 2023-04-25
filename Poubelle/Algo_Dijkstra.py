@@ -14,6 +14,7 @@ to do :
     **** Imports ****
     ******************** """
 # no data
+import numpy as np
 
 """ ********************
     **** Classes ****
@@ -71,7 +72,13 @@ def plus_court_chemin(matadj,start,end):
 # no data
 
 
+mat=np.array([[0,1,2,0,0],
+                    [0,0,0,3,0],
+                    [0,0,0,1,0],
+                    [0,0,0,0,3],
+                    [0,2,1,0,0]])
 
+print(plus_court_chemin(mat,0,4))
 
 
 

@@ -19,9 +19,11 @@ import sys
 from Recuperation_donnees import recup
 from Recuperation_donnees import distance
 from Matrice_adjacence import creation_matrice
-from Algo_Dijkstra import plus_court_chemin
-from Verification_connexite import connexite
-from Cycle_Hamiltonien import condition_Dirac
+from Algo_PCC import dijkstra_mat
+from Verifications import connexite
+from Verifications import condition_Dirac
+from Verifications import densite
+from Verifications import centralite
 from Changements import changements
 
 
@@ -59,11 +61,10 @@ def appartenance_ligne(station): # Renvoie les lignes auquelles appartient la st
     return ligne
 
 def recherche_itineraire(depart,destination): # Renvoie le dictionnaire des changements, le chemin et la distance entre le depart et la destination 
-    chemin_indices,distance = plus_court_chemin(matrice, liste_stations_matrice.index(depart), liste_stations_matrice.index(destination))
+    chemin_indices,distance = dijkstra_mat(matrice, liste_stations_matrice.index(depart), liste_stations_matrice.index(destination))
     chemin = [liste_stations_matrice[el] for el in chemin_indices]
     dico_changements = changements(chemin,appartenance_ligne)
     return chemin,distance,dico_changements # dico_changement = {station : [ligne d'arrivé,ligne de départ]}
-
 
 
 """ ********************
@@ -89,15 +90,30 @@ vitesse_metro = 21
     **** Main ****
     ************** """
 
-if connexite(matrice): # Verifie la connexité du graph
-    print('graphe connexe')
+if connexite(matrice): # Verifie la connexité du graphe
+    print('Le graphe est connexe')
 else :
-    print('graphe non connexe')
-    
+    print('Le graphe est non connexe')
+
+if densite(matrice)<0.15:
+    print('Le graphe est creux')
+elif densite(matrice)>0.5:
+    print("Le graphe est dense")
+else:
+    print("Le graphe n'est ni dense, ni creux")  
+
 if condition_Dirac(matrice):
     print('Il existe un cycle Hamiltonien')
 else:
     print("Il n'existe pas de cycle Hamiltonien")
+
+dico_centralite={}
+for i in centralite(matrice).keys():
+    dico_centralite[liste_stations_matrice[i]]=centralite(matrice)[i]
+print('Les sommets principaux sont:',dico_centralite)
+
+
+
 
 class IconListItem(OneLineIconListItem):
     icon = StringProperty()
@@ -416,7 +432,4 @@ if __name__ == "__main__":
     LabelBase.register("MPoppins", "Poppins/Poppins-Medium.ttf") 
     LabelBase.register("BPoppins", "Poppins/Poppins-SemiBold.ttf")
     Application().run()                                           # lance l'application à l'execution du script python
-
-
-
 
