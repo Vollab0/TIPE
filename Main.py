@@ -396,7 +396,7 @@ class Application(MDApp):
             if depart == destination:
                 popup = self.root.get_screen('main').ids.popup
                 popup_text = self.root.get_screen('main').ids.popup_text
-                popup_text.text = 'Merci de choisir deux stations différentes...'
+                popup_text.text = 'Merci de choisir deux stations différentes'
 
                 anim = Animation(opacity = 1, duration = 0.3)
                 anim.start(popup)
