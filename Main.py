@@ -19,7 +19,8 @@ import sys
 from Recuperation_donnees import recup
 from Recuperation_donnees import distance
 from Matrice_adjacence import creation_matrice
-from Algo_PCC import dijkstra_mat
+from Algo_PCC import dijkstra_dic
+from Algo_PCC import mat_to_dico
 from Verifications import connexite
 from Verifications import condition_Dirac
 from Verifications import densite
@@ -61,7 +62,7 @@ def appartenance_ligne(station): # Renvoie les lignes auquelles appartient la st
     return ligne
 
 def recherche_itineraire(depart,destination): # Renvoie le dictionnaire des changements, le chemin et la distance entre le depart et la destination 
-    chemin_indices,distance = dijkstra_mat(matrice, liste_stations_matrice.index(depart), liste_stations_matrice.index(destination))
+    chemin_indices,distance = dijkstra_dic(dico_matrice, liste_stations_matrice.index(depart), liste_stations_matrice.index(destination))
     chemin = [liste_stations_matrice[el] for el in chemin_indices]
     dico_changements = changements(chemin,appartenance_ligne)
     return chemin,distance,dico_changements # dico_changement = {station : [ligne d'arrivé,ligne de départ]}
@@ -78,6 +79,8 @@ stations_infos,lignes_infos,codes_lignes = recup(lien_lignes, lien_arrets)
 
 matrice,liste_stations_matrice = creation_matrice(lignes_infos, stations_infos)
 
+dico_matrice=mat_to_dico(matrice)
+
 Couleurs = {'A': [.863, .235, .6, 1.0],'B': [.188, .474, .761, 1.0],'C': [.925, .58, .063, 1.0],'D': [.255, .666, .286, 1.0],'F': [.572, .776, .278, 1.0]} 
 
 distance_foch_massena = 691.19 # distance utilisée pour transformer les distances en EPSG:3946 en mètres
@@ -85,6 +88,7 @@ distance_en_EPSG = distance(stations_infos['Foch'],stations_infos['Masséna'])
 facteur_distance = distance_foch_massena / distance_en_EPSG # calcul du facteur reliant les deux unitées de mesures
 
 vitesse_metro = 21
+
 
 """ **************
     **** Main ****
@@ -433,4 +437,8 @@ if __name__ == "__main__":
     LabelBase.register("MPoppins", "Poppins/Poppins-Medium.ttf") 
     LabelBase.register("BPoppins", "Poppins/Poppins-SemiBold.ttf")
     Application().run()
+
+
+
+
 

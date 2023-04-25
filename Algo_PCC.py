@@ -14,8 +14,11 @@ to do :
     **** Imports ****
     ******************** """
 
-import numpy as np
 import heapq
+from Recuperation_donnees import recup
+from Recuperation_donnees import distance
+from Matrice_adjacence import creation_matrice
+
 
 """ ********************
     **** Classes ****
@@ -27,7 +30,13 @@ import heapq
     **** Functions ****
     ******************** """
 
-def dijkstra_mat(matadj,start,end):
+def voisins(matrice, sommet):
+    liste_voisins=[i for i in range(len(matrice)) if matrice[sommet][i]!=0]
+    return liste_voisins
+
+##########
+
+def dijkstra_mat(matadj, start, end):
     assert type(start) == int , "L'indice de la station de départ doit être un entier"
     assert type(end) == int , "L'indice de la station d'arrivé doit être un entier"
     n = len(matadj)
@@ -36,18 +45,21 @@ def dijkstra_mat(matadj,start,end):
     visite = [False for i in range(n)]
     distances[start] = 0
     file = [start]
-    
-    while len(file)!=0 :
+    voisins_end=voisins(matadj,end)
+
+    while len(voisins_end)!=0:
         sommet_act = file[0]
         visite[sommet_act] = True
         del file[0]
         for i in range(n):
-            if matadj[sommet_act][i] != 0 and visite[i] == False:
+            if matadj[sommet_act][i] != 0:
                 if distances[i] > distances[sommet_act] + matadj[sommet_act][i]:
                     distances[i] = distances[sommet_act] + matadj[sommet_act][i]
                     sommet_pre[i] = sommet_act
                 if i not in file:
                     file.append(i)
+                if sommet_act in voisins_end:
+                    voisins_end.remove(sommet_act)
     
     chemin = [end]
     sommet_act = end
@@ -73,8 +85,9 @@ def mat_to_dico(matrice):
 
 ##########
 
-def dijkstra_dic(graphe,depart,arrivee):
-    dico=mat_to_dico(graphe)
+def dijkstra_dic(dico, depart, arrivee):
+    assert type(depart) == int , "L'indice de la station de départ doit être un entier"
+    assert type(arrivee) == int , "L'indice de la station d'arrivé doit être un entier"
     distances = {sommet : float('inf') for sommet in dico}
     distances[depart] = 0
     heap = [(0, depart)]
@@ -105,48 +118,44 @@ def dijkstra_dic(graphe,depart,arrivee):
 
 ##########
 
-def voisins(matrice,sommet):
-    liste_voisins=[i for i in range(len(matrice)) if matrice[sommet][i]!=0]
-    return liste_voisins
+def Astar(matrice, debut, fin):
+    openlist = [debut]
+    closedlist = []
+    parents = {}
+    poids = {debut: 0}
+    distances = {debut: 0}
 
-##########
+    while len(openlist) != 0:
 
-def Astar(matrice,debut,fin):
-    openlist=[debut]
-    closedlist=[]
-    parents={}
-    poids={debut:0}
-    heuristique={0:9, 1:5, 2:6, 3:4, 4:0}
-    
-    while len(openlist)!=0:
-   
         cout = float("inf")
         for noeud in openlist:
-            if poids[noeud]+heuristique[noeud]<cout:
-                cout=poids[noeud]+heuristique[noeud]
-                noeud_act=noeud
-            
+            if poids[noeud] + distance(stations_infos[liste_stations_matrice[noeud]], stations_infos[liste_stations_matrice[fin]]) < cout:
+                cout = poids[noeud] + distance(stations_infos[liste_stations_matrice[noeud]], stations_infos[liste_stations_matrice[fin]])
+                noeud_act = noeud
+
         if noeud_act == fin:
-            chemin=[fin]
+            chemin = [fin]
             dernier = fin
             while dernier != debut:
                 chemin.append(parents[dernier])
                 dernier = parents[dernier]
-            return chemin[::-1]
+            chemin.reverse()
+            return chemin, distances[fin]
 
         closedlist.append(noeud_act)
         openlist.remove(noeud_act)
-                
-        for voi in voisins(matrice,noeud_act):
+
+        for voi in voisins(matrice, noeud_act):
             if voi not in closedlist:
-                new_poids = poids[noeud_act] + matrice[noeud][voi]
-            if voi not in openlist or new_poids < poids[voi]:
-                parents[voi] = noeud_act
-                poids[voi] = new_poids
-                if voi not in openlist:
-                    openlist.append(voi)
-    
-    return 'Nope'
+                new_poids = poids[noeud_act] + matrice[noeud_act][voi]
+                if voi not in openlist or new_poids < poids[voi]:
+                    parents[voi] = noeud_act
+                    poids[voi] = new_poids
+                    distances[voi] = distances[noeud_act] + matrice[noeud_act][voi]
+                    if voi not in openlist:
+                        openlist.append(voi)
+
+    return "Impossible d'atteindre l'arrivée", "distance inconnue"
 
 """ ********************
     **** Global Var ****
@@ -157,3 +166,10 @@ def Astar(matrice,debut,fin):
 """ **************
     **** Main ****
     ************** """
+
+lien_lignes = "https://download.data.grandlyon.com/wfs/rdata?SERVICE=WFS&VERSION=2.0.0&request=GetFeature&typename=tcl_sytral.tcllignemf_2_0_0&outputFormat=application/json; subtype=geojson&SRSNAME=EPSG:3946&startIndex=0&count=100"
+lien_arrets = "https://download.data.grandlyon.com/wfs/rdata?SERVICE=WFS&VERSION=2.0.0&request=GetFeature&typename=tcl_sytral.tclarret&outputFormat=application/json; subtype=geojson&SRSNAME=EPSG:3946&startIndex=0&count=4657"
+
+stations_infos,lignes_infos,codes_lignes = recup(lien_lignes, lien_arrets)
+
+matrice,liste_stations_matrice = creation_matrice(lignes_infos, stations_infos)
