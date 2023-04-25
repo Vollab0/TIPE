@@ -182,7 +182,6 @@ class Application(MDApp):
             width_mult = 4,
         )
         
-
         return self.root # Affiche les pages
     
     def nom_station_depart(self, nom): # Cette fonction met a jour dynamiquement le nom de la station choisie et ferme le menu
@@ -401,7 +400,7 @@ class Application(MDApp):
             if depart == destination:
                 popup = self.root.get_screen('main').ids.popup
                 popup_text = self.root.get_screen('main').ids.popup_text
-                popup_text.text = 'Merci de choisir deux stations différentes...'
+                popup_text.text = 'Merci de choisir deux stations différentes'
 
                 anim = Animation(opacity = 1, duration = 0.3)
                 anim.start(popup)
@@ -436,7 +435,7 @@ if __name__ == "__main__":
     LabelBase.register("RPoppins", "Poppins/Poppins-Regular.ttf") # initialise la police de caractère
     LabelBase.register("MPoppins", "Poppins/Poppins-Medium.ttf") 
     LabelBase.register("BPoppins", "Poppins/Poppins-SemiBold.ttf")
-    Application().run()
+    Application().run()                                           # lance l'application à l'execution du script python
 
 
 

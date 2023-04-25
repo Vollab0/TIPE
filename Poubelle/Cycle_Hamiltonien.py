@@ -29,7 +29,7 @@ def condition_Dirac(matrice): # Verifie la condition de Dirac qui dit qu'un cylc
     for i in range(len(matrice)):
         if len(matrice_ligne_sans_zeros[i]) < (len(matrice)/2): # la matrice est symetrique donc len(matrice) correspond au nombre de sommets
             return False
-    return True      
+    return True
         
 
    
