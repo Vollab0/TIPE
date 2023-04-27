@@ -124,7 +124,6 @@ class IconListItem(OneLineIconListItem):
 
 class Application(MDApp):
 
-    resultat = StringProperty() # Provisoire
     zone_texte_destination = ObjectProperty(None)
     zone_texte_depart = ObjectProperty(None)
 
@@ -139,9 +138,8 @@ class Application(MDApp):
         self.theme_cls = ThemeManager()
 
         self.root = ScreenManager() # Gestion des differentes pages
-        self.root.add_widget(Builder.load_file('page_principale.kv')) # Charge le premier ecran test.kv
-        self.root.add_widget(Builder.load_file('page_resultats.kv')) # Charge le premier ecran test.kv
-
+        self.root.add_widget(Builder.load_file('page_principale.kv')) # Charge le premier ecran
+        self.root.add_widget(Builder.load_file('page_resultats.kv')) # Charge le deuxième ecran
         stations_clees = list(stations_infos.keys())
         stations_triees = sorted(stations_clees)
 
@@ -297,7 +295,7 @@ class Application(MDApp):
             Boite_image.add_widget(image)
 
             icone.height = 35
-            icone.pos_hint = {'center_x': .6, 'center_y': .5}  # L'alignement selon x peut être amélioré
+            icone.pos_hint = {'center_x': .6, 'center_y': .5}  
 
             Boite_icone = MDBoxLayout(orientation='horizontal', size_hint_x=.35)
             Boite_icone.add_widget(icone)
@@ -418,16 +416,8 @@ class Application(MDApp):
                 self.root.current = 'resultat'
 
                 self.afficher_resultats()
-
-                #print("Le chemin le plus court pour aller de " + depart + " à " + destination + " est " + str(self.chemin) + " et il fait " + str(self.distance) + " km.\n\nIl y a " + str(len(self.dico_changements.keys())) + " changements :")
-                #for el in self.dico_changements.keys() :
-                 #   print("- à " + el + " du métro " + self.dico_changements[el][0] + " au métro " + self.dico_changements[el][1])
         
         
-
-
-
-
     def quitter(self):
         sys.exit()
 
